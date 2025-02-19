@@ -1,0 +1,78 @@
+/* Signup.css */
+
+.signup-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #e8f5e9; /* Light Green Background */
+}
+
+.signup-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 360px;
+}
+
+.signup-box h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #2e7d32; /* Dark Green Heading */
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #388e3c; /* Medium Green Label */
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #a5d6a7; /* Light Green Border */
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #f1f8e9; /* Soft Green Input Background */
+}
+
+/* Submit Button */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #6d756d; /* Primary Green */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #388e3c; /* Darker Green */
+}
+
+/* Footer Buttons */
+.signup-footer {
+  margin-top: 15px;
+}
+
+.signup-footer button {
+  background-color: #1b5e20; /* Dark Green for Footer Button */
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.signup-footer button:hover {
+  background-color: #0d5302; /* Even Darker Green */
+}

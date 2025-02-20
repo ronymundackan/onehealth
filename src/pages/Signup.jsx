@@ -1,137 +1,102 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/Signup.css';
+import { 
+  LayoutDashboard, 
+  GraduationCap, 
+  Hand, 
+  Settings, 
+} from 'lucide-react';
 
-export default function Signup() {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    place: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    // Send data to the PHP backend
-    try {
-      const response = await fetch('http://localhost/server/api/signup.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          place: formData.place,
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          password: formData.password,
-        }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message); // "User registered successfully."
-      } else {
-        alert(result.message); // "Error registering user."
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while registering.');
-    }
-  };
-
+const Dashboard = () => {
+  const [activeItem, setActiveItem] = useState('Settings');
+  
   return (
-    <div className="container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Full Name"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="place"
-          placeholder="Place"
-          value={formData.place}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="tel"
-          name="phoneNumber"
-          placeholder="Phone Number"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          required
-        />
-        <div className="password-container">
-          <input
-            type={passwordVisible ? 'text' : 'password'}
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <span
-            className="password-toggle"
-            onClick={() => setPasswordVisible(!passwordVisible)}
-          >
-            {passwordVisible ? '👁️' : '🙈'}
-          </span>
+    <div className="flex h-screen w-full">
+      {/* Left Sidebar - Fixed position */}
+      <div className="w-64 border-r border-gray-200 bg-white flex flex-col h-full fixed left-0 top-0">
+        {/* Logo */}
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-md bg-indigo-600">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+            </div>
+            <span className="ml-2 text-xl font-semibold text-indigo-700">Logoipsum</span>
+          </div>
         </div>
-        <div className="password-container">
-          <input
-            type={confirmPasswordVisible ? 'text' : 'password'}
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6 space-y-4">
+          <NavItem 
+            icon={<LayoutDashboard size={20} />} 
+            text="Dashboard" 
+            active={activeItem === 'Dashboard'} 
+            onClick={() => setActiveItem('Dashboard')}
           />
-          <span
-            className="password-toggle"
-            onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-          >
-            {confirmPasswordVisible ? '👁️' : '🙈'}
-          </span>
+          <NavItem 
+            icon={<GraduationCap size={20} />} 
+            text="Students" 
+            active={activeItem === 'Students'} 
+            onClick={() => setActiveItem('Students')}
+          />
+          <NavItem 
+            icon={<Hand size={20} />} 
+            text="Attendance" 
+            active={activeItem === 'Attendance'} 
+            onClick={() => setActiveItem('Attendance')}
+          />
+          <NavItem 
+            icon={<Settings size={20} />} 
+            text="Settings" 
+            active={activeItem === 'Settings'} 
+            onClick={() => setActiveItem('Settings')}
+          />
+        </nav>
+
+        {/* User Profile */}
+        <div className="p-4 border-t border-gray-200 mt-auto">
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-800 text-white">
+              <span>G</span>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium">Game Play</p>
+              <p className="text-xs text-gray-500">gameplayapp007@gmail.com</p>
+            </div>
+          </div>
         </div>
-        <button type="submit">Sign Up</button>
-      </form>
-      <div style={{ marginTop: '10px' }}>
-        <Link className="link" to="/">Already have an account? Login</Link>
+      </div>
+
+      {/* Main Content - With left margin to account for sidebar */}
+      <div className="ml-64 flex-1 p-6">
+        <div className="text-lg font-medium">page</div>
+        {/* Here you would add your main page content */}
       </div>
     </div>
   );
-}
+};
+
+// Navigation Item Component
+const NavItem = ({ icon, text, active, onClick }) => {
+  return (
+    <div 
+      className={`flex items-center p-3 rounded-md cursor-pointer transition-colors ${
+        active 
+          ? 'bg-indigo-600 text-white' 
+          : 'text-gray-600 hover:bg-indigo-600 hover:text-white'
+      }`}
+      onClick={onClick}
+    >
+      <div>{icon}</div>
+      <span className="ml-4 font-medium">{text}</span>
+      {active && (
+        <div className="ml-auto">
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Dashboard;

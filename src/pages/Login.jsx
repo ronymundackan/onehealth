@@ -1,85 +1,121 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/Login.css';
-
-export default function Login() {
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
+  const { email, password } = formData;
+
+  // Update state as user types
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(''); // Clear error on input change
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await fetch('http://localhost/server/api/login.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post('http://localhost:5000/auth/login', { // Corrected endpoint
+        email,
+        password,
       });
 
-      const result = await response.json();
+      // Store token in localStorage
+      localStorage.setItem('token', response.data.token);
 
-      if (response.ok) {
-        alert(result.message); // "Login successful."
+      // Fetch user role (or include it in the JWT if possible)
+      const user = await axios.get('http://localhost:5000/users/me', { // Assuming you have an endpoint to get user info
+        headers: {
+          Authorization: `Bearer ${response.data.token}`,
+        },
+      });
 
-        // Redirect based on user role
-        switch (result.role) {
-          case 'admin':
-            navigate('/admin-dashboard');
-            break;
-          case 'hospital':
-            navigate('/hospital-dashboard');
-            break;
-          case 'user':
-            navigate('/user-dashboard');
-            break;
-          default:
-            navigate('/');
-        }
-      } else {
-        alert(result.message); // "Invalid email or password."
+      localStorage.setItem('userRole', user.data.role); // Assuming user.data.role contains the role
+
+      // Redirect based on role
+      if (user.data.role === 'patient') {
+        navigate('/user-dashboard');
+      } else if (user.data.role === 'hospital') {
+        navigate('/hospital-dashboard');
+      } else if (user.data.role === 'admin') {
+        navigate('/admin-dashboard');
       }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while logging in.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-        <div className='linkbox'>
-          <div className='link1'>
-            <Link className="link" to="/forgot-password">Forgot Password? </Link>
+    <div className="login-container">
+      <div className="login-form-container">
+        <h1>Medical Records System</h1>
+        <h2>Login to Your Account</h2>
+        
+        {error && <div className="error-message">{error}</div>}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
+            />
           </div>
-          <div>
-            <p>Don't have an Account?</p>
+          
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              required
+            />
           </div>
-          <div>
-            <Link className="link" to="/signup">Sign Up</Link>
+          
+          <div className="form-links">
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot Password?
+            </Link>
           </div>
-        </div>      
+          
+          <button 
+            type="submit" 
+            className="login-button"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+        
+        <div className="signup-prompt">
+          Don't have an account?{' '}
+          <Link to="/signup" className="signup-link">
+            Sign Up
+          </Link>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Login;

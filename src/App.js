@@ -4,10 +4,10 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import UserDashboard from './pages/UserDashboard';
+import HospitalDashboard from './pages/HospitalDashboard'; // Import HospitalDashboard
+import AdminDashboard from './pages/AdminDashboard'; // Import AdminDashboard
 import MedicalRecords from './pages/MedicalRecords';
 import Allergies from './pages/Allergies';
-// import Appointments from './pages/Appointments';
-// import Settings from './pages/Settings';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -44,9 +44,25 @@ function App() {
           <Route index element={<Navigate to="medical-records" />} /> {/* Default dashboard sub-route */}
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="allergies" element={<Allergies />} />
-          {/* <Route path="appointments" element={<Appointments />} />
-          <Route path="settings" element={<Settings />} /> */}
         </Route>
+
+        <Route
+          path="/hospital-dashboard"
+          element={
+            <ProtectedRoute>
+              <HospitalDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch all unknown routes */}
         <Route path="*" element={<Navigate to="/login" />} />

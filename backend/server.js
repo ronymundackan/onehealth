@@ -5,6 +5,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users'); // Import users routes
+const hospitalsRoutes = require('./routes/hospitals');
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes); // Mount users routes
+app.use('/hospitals', hospitalsRoutes); // Mount hospitals routes
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

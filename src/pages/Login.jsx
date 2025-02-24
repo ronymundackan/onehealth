@@ -39,9 +39,9 @@ const Login = () => {
           Authorization: `Bearer ${response.data.token}`,
         },
       });
-
+      console.log("Role from backend:", user.data.role);
       localStorage.setItem('userRole', user.data.role); // Assuming user.data.role contains the role
-
+      console.log("Role from local storage:", localStorage.getItem('userRole')); 
       // Redirect based on role
       if (user.data.role === 'patient') {
         navigate('/user-dashboard');

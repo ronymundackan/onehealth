@@ -9,7 +9,7 @@ const MedicalRecords = () => {
   useEffect(() => {
     const fetchMedicalRecords = async () => {
       try {
-        const response = await axios.get('http://localhost/server/api/medicalrecords.php', {
+        const response = await axios.get('http', {
           withCredentials: true, // Important to include cookies for sessions
         });
         setRecords(response.data);

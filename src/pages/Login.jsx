@@ -32,13 +32,21 @@ const Login = () => {
 
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-
-      // Fetch user role (or include it in the JWT if possible)
-      const user = await axios.get('http://localhost:5000/users/me', { // Assuming you have an endpoint to get user info
+      console.log(localStorage.getItem('token'))
+      console.log('Token stored in localStorage:', localStorage.getItem('token')); // Check token storage
+    
+      // Fetch user role
+      const user = await axios.get('http://localhost:5000/users/me', {
         headers: {
-          Authorization: `Bearer ${response.data.token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+    
+      console.log("axios call: ", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       console.log("Role from backend:", user.data.role);
       localStorage.setItem('userRole', user.data.role); // Assuming user.data.role contains the role
       console.log("Role from local storage:", localStorage.getItem('userRole')); 

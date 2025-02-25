@@ -1,10 +1,15 @@
-// pages/AdminDashboard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AdminDashboard = () => {
   const [hospitals, setHospitals] = useState([]);
-  const [newHospital, setNewHospital] = useState({ name: '', location: '', contact: ''});
+  const [newHospital, setNewHospital] = useState({
+    name: '',
+    location: '',
+    contact: '',
+    email: '', // Added email field
+    password: '', // Added password field
+  });
   const [selectedHospital, setSelectedHospital] = useState(null);
 
   useEffect(() => {
@@ -28,7 +33,7 @@ const AdminDashboard = () => {
     try {
       await axios.post('http://localhost:5000/hospitals', newHospital, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
       fetchHospitals();
-      setNewHospital({ name: '', location: '', contact: ''});
+      setNewHospital({ name: '', location: '', contact: '', email: '', password: '' }); // Reset fields
     } catch (error) {
       console.error('Error adding hospital:', error);
     }
@@ -44,7 +49,7 @@ const AdminDashboard = () => {
       await axios.put(`http://localhost:5000/hospitals/${selectedHospital.hospital_id}`, newHospital, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
       fetchHospitals();
       setSelectedHospital(null);
-      setNewHospital({ name: '', location: '', contact: ''});
+      setNewHospital({ name: '', location: '', contact: '', email: '', password: '' }); // Reset fields
     } catch (error) {
       console.error('Error updating hospital:', error);
     }
@@ -68,6 +73,8 @@ const AdminDashboard = () => {
         <input name="name" placeholder="Name" value={newHospital.name} onChange={handleInputChange} />
         <input name="location" placeholder="Location" value={newHospital.location} onChange={handleInputChange} />
         <input name="contact" placeholder="Contact" value={newHospital.contact} onChange={handleInputChange} />
+        <input name="email" placeholder="Email" value={newHospital.email} onChange={handleInputChange} /> {/* Added email input */}
+        <input name="password" type="password" placeholder="Password" value={newHospital.password} onChange={handleInputChange} /> {/* Added password input */}
         {selectedHospital ? (
           <button onClick={updateHospital}>Update Hospital</button>
         ) : (

@@ -59,7 +59,6 @@ const Signup = () => {
         gender,
         phone_number,
         address, // Added address
-        role: 'patient', // Set default role to 'User'
       });
 
       // Registration successful

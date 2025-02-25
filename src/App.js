@@ -11,10 +11,11 @@ import Allergies from './pages/Allergies';
 import Doctors from './pages/Doctors';
 import SearchRecords from './pages/SearchRecords';
 import ManageAppointments from './pages/ManageAppointments';
-import UserSettings from './pages/UserSettings';
+import AppointmentStatus from './pages/AppointmentStatus';
 import HospitalSettings from './pages/HospitalSettings';
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 import Appointments from './pages/Appointments';
+
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="allergies" element={<Allergies />} />
           <Route path="appointments" element={<Appointments />} />
-          <Route path="settings" element={<UserSettings />} />
+          <Route path="appointment-status" element={<AppointmentStatus />} />
         </Route>
 
         <Route

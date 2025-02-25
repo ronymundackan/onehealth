@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
       }
 
       try {
-        await axios.get('http://localhost:5000/auth/verify', { // backend route to verify token
+        await axios.get('http://localhost:5000/auth/verify', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children }) => {
   if (isAuthenticated) {
     return children;
   } else {
-    return <Navigate to="http://localhost:5000/login" />;
+    return <Navigate to="/login" />; // Corrected redirect
   }
 };
 

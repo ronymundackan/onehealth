@@ -52,7 +52,7 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 // Get all hospitals
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM Hospitals');
     res.json(rows);
@@ -144,6 +144,20 @@ router.get('/hospital-details', authMiddleware, async (req, res) => {
   } catch (error) {
     console.error('Error fetching hospital details:', error);
     res.status(500).json({ message: 'Failed to fetch hospital details' });
+  }
+});
+
+router.get('/:hospitalId/doctors', async (req, res) => {
+  try {
+    const { hospitalId } = req.params;
+    const [doctorRows] = await pool.query(
+      'SELECT doctor_id, name, specialization FROM Doctors WHERE hospital_id = ?',
+      [hospitalId]
+    );
+    res.json(doctorRows);
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    res.status(500).json({ message: 'Failed to fetch doctors' });
   }
 });
 

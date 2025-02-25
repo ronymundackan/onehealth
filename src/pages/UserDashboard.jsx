@@ -6,8 +6,8 @@ import {
   FileText,
   AlertTriangle,
   Calendar,
-  Settings,
-  User
+  ListChecks, // Changed from Settings to ListChecks for Appointment Status
+  User,
 } from 'lucide-react';
 
 const UserDashboard = () => {
@@ -21,12 +21,11 @@ const UserDashboard = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/users/user-details', { // Updated endpoint
+        const response = await axios.get('http://localhost:5000/users/user-details', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -34,10 +33,8 @@ const UserDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchUserData();
   }, []);
-
 
   // Determine active item based on current path
   const getActiveItem = () => {
@@ -45,7 +42,7 @@ const UserDashboard = () => {
     if (path.includes('/medical-records')) return 'MedicalRecords';
     if (path.includes('/allergies')) return 'Allergies';
     if (path.includes('/appointments')) return 'Appointments';
-    if (path.includes('/settings')) return 'Settings';
+    if (path.includes('/appointment-status')) return 'AppointmentStatus';
     return 'MedicalRecords'; // Default
   };
 
@@ -54,12 +51,10 @@ const UserDashboard = () => {
   const handleNavigation = (route) => {
     navigate(`/user-dashboard/${route}`);
   };
-  const handleLogout = () => {
-    // Remove the token from localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole'); //remove the user role as well.
 
-    // Redirect to the login page
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
     navigate('/login');
   };
 
@@ -101,14 +96,13 @@ const UserDashboard = () => {
             onClick={() => handleNavigation('appointments')}
           />
           <NavItem
-            icon={<Settings size={20} />}
-            text="Settings"
-            active={activeItem === 'Settings'}
-            onClick={() => handleNavigation('settings')}
+            icon={<ListChecks size={20} />} // Changed icon and text
+            text="Appointment Status"
+            active={activeItem === 'AppointmentStatus'}
+            onClick={() => handleNavigation('appointment-status')}
           />
         </nav>
 
-        {/* User Profile */}
         {/* User Profile & Logout */}
         <div className="p-4 border-t border-gray-200 mt-auto">
           <div className="flex items-center">
@@ -129,8 +123,6 @@ const UserDashboard = () => {
               )}
             </div>
           </div>
-
-          {/* Logout Button */}
           <button
             className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
             onClick={handleLogout}
@@ -138,12 +130,10 @@ const UserDashboard = () => {
             Logout
           </button>
         </div>
-
       </div>
 
       {/* Main Content - With left margin to account for sidebar */}
       <div className="ml-64 flex-1 p-6">
-        {/* This is where the routed component will be rendered */}
         <Outlet />
       </div>
     </div>
@@ -154,10 +144,9 @@ const UserDashboard = () => {
 const NavItem = ({ icon, text, active, onClick }) => {
   return (
     <div
-      className={`flex items-center p-3 rounded-md cursor-pointer transition-colors ${active
-          ? 'bg-blue-600 text-white'
-          : 'text-gray-600 hover:bg-blue-600 hover:text-white'
-        }`}
+      className={`flex items-center p-3 rounded-md cursor-pointer transition-colors ${
+        active ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-blue-600 hover:text-white'
+      }`}
       onClick={onClick}
     >
       <div>{icon}</div>

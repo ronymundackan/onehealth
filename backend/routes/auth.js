@@ -55,7 +55,7 @@ router.post('/signup', async (req, res) => {
     // Insert into Users table
     const [userResult] = await connection.query(
       'INSERT INTO Users (email, password_hash, role) VALUES (?, ?, ?)',
-      [email, hashedPassword, 'User']
+      [email, hashedPassword, 'patient']
     );
     const userId = userResult.insertId;
 

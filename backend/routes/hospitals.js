@@ -121,4 +121,31 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/hospital-details', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    // Fetch hospital name and user email
+    const [hospitalRows] = await pool.query(
+      'SELECT h.name, u.email FROM Hospitals h JOIN Users u ON h.user_id = u.user_id WHERE h.user_id = ?',
+      [userId]
+    );
+
+    if (hospitalRows.length === 0) {
+      return res.status(404).json({ message: 'Hospital details not found' });
+    }
+
+    const hospitalDetails = hospitalRows[0];
+
+    res.json({
+      name: hospitalDetails.name,
+      email: hospitalDetails.email,
+    });
+  } catch (error) {
+    console.error('Error fetching hospital details:', error);
+    res.status(500).json({ message: 'Failed to fetch hospital details' });
+  }
+});
+
+
 module.exports = router;

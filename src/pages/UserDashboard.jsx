@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import axios from 'axios';
+
 import {
   FileText,
   AlertTriangle,
@@ -18,16 +20,14 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost/server/api/userinfo.php', {
-          method: 'GET',
-          credentials: 'include', // Important for sending session cookies
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/users/user-details', { // Updated endpoint
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data);
-        } else {
-          console.error('Failed to fetch user data');
-        }
+
+        setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
@@ -123,7 +123,7 @@ const UserDashboard = () => {
                 </>
               ) : (
                 <>
-                  <p className="text-sm font-medium text-gray-500">{userData?.full_name || 'Unknown User'}</p>
+                  <p className="text-sm font-medium text-gray-500">{userData?.name || 'Unknown User'}</p>
                   <p className="text-xs text-gray-500">{userData?.email || 'No email available'}</p>
                 </>
               )}

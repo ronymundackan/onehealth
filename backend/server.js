@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users'); // Import users routes
 const hospitalsRoutes = require('./routes/hospitals');
-
+const doctorsRoutes = require('./routes/doctors'); // Import doctors routes
 
 
 dotenv.config();
@@ -22,6 +22,8 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes); // Mount users routes
 app.use('/hospitals', hospitalsRoutes); // Mount hospitals routes
+app.use('/doctors', doctorsRoutes); // Corrected base path
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

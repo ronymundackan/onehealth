@@ -13,16 +13,9 @@ import SearchRecords from './pages/SearchRecords';
 import ManageAppointments from './pages/ManageAppointments';
 import UserSettings from './pages/UserSettings';
 import HospitalSettings from './pages/HospitalSettings';
-
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 import Appointments from './pages/Appointments';
 
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('token');
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-  return children;
-};
 
 function App() {
   return (
@@ -36,7 +29,7 @@ function App() {
         <Route
           path="/user-dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
               <UserDashboard />
             </ProtectedRoute>
           }
@@ -51,7 +44,7 @@ function App() {
         <Route
           path="/hospital-dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
               <HospitalDashboard />
             </ProtectedRoute>
           }
@@ -66,12 +59,12 @@ function App() {
         <Route
           path="/admin-dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
               <AdminDashboard />
             </ProtectedRoute>
           }
         >
-         
+          
         </Route>
 
         <Route path="*" element={<Navigate to="/login" />} />
@@ -81,3 +74,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,206 +1,181 @@
-/* AdminDashboard.css */
-:root {
-    --primary-color: #3498db;
-    --secondary-color: #2c3e50;
-    --danger-color: #e74c3c;
-    --success-color: #2ecc71;
-    --light-gray: #f5f5f5;
-    --border-color: #ddd;
-    --text-color: #333;
-    --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--light-gray);
-    color: var(--text-color);
-  }
-  
-  .admin-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  h1 {
-    color: var(--secondary-color);
-    margin: 0;
-  }
-  
-  h2 {
-    color: var(--secondary-color);
-    margin-top: 30px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .logout-btn {
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .logout-btn:hover {
-    background-color: #c0392b;
-  }
-  
-  .form-container {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    margin-bottom: 30px;
-  }
-  
+/* Container */
+.admin-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: white;
+}
+
+.logout-btn {
+  padding: 8px 14px;
+  background: #dc2626;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+}
+
+/* Form Styling */
+.form-container {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-container h2 {
+  text-align: center;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.add-btn, .update-btn, .cancel-btn {
+  padding: 10px 16px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-btn {
+  background: #059669;
+}
+
+.add-btn:hover {
+  background: #047857;
+}
+
+.update-btn {
+  background: #2563eb;
+}
+
+.update-btn:hover {
+  background: #1e40af;
+}
+
+.cancel-btn {
+  background: #d97706;
+}
+
+.cancel-btn:hover {
+  background: #b45309;
+}
+
+/* Hospitals List */
+.hospitals-list {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.hospitals-list h2 {
+  text-align: center;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.hospital-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.hospital-info {
+  color: white;
+}
+
+.hospital-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 6px 12px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.edit-btn {
+  background: #0284c7;
+}
+
+.edit-btn:hover {
+  background: #0369a1;
+}
+
+.delete-btn {
+  background: #dc2626;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+      flex-direction: column;
   }
-  
-  input {
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 14px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-  }
-  
-  .btn-container {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .add-btn, .update-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .add-btn:hover, .update-btn:hover {
-    background-color: #2980b9;
-  }
-  
-  .cancel-btn {
-    background-color: #95a5a6;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #7f8c8d;
-  }
-  
-  .hospitals-list {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  
-  .hospitals-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
+
   .hospital-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .hospital-item:last-child {
-    border-bottom: none;
-  }
-  
-  .hospital-info {
-    flex: 1;
-  }
-  
-  .hospital-actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .edit-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .edit-btn:hover {
-    background-color: #2980b9;
-  }
-  
-  .delete-btn {
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .delete-btn:hover {
-    background-color: #c0392b;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-    
-    .hospital-item {
       flex-direction: column;
       align-items: flex-start;
-    }
-    
-    .hospital-actions {
-      margin-top: 10px;
-      align-self: flex-end;
-    }
   }
+
+  .hospital-actions {
+      margin-top: 8px;
+  }
+}

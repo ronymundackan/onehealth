@@ -53,10 +53,10 @@ router.post('/records/:patientId', authMiddleware, async (req, res) => {
 
     const hospitalId = hospitalRows[0].hospital_id;
 
-    const { disease, description, treatment_date, ongoing_medication, prescription } = req.body;
+    const { disease, description, treatment_date,  prescription } = req.body;
     await pool.query(
-      'INSERT INTO MedicalRecords (user_id, hospital_id, disease, description, treatment_date, ongoing_medication, prescription) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [patientId, hospitalId, disease, description, treatment_date, ongoing_medication, prescription]
+      'INSERT INTO Medical_Records (user_id, hospital_id, disease, description, treatment_date, prescription) VALUES (?, ?, ?, ?, ?, ?)',
+      [patientId, hospitalId, disease, description, treatment_date, prescription]
     );
     res.json({ message: 'Record added successfully' });
   } catch (error) {
@@ -83,10 +83,10 @@ router.put('/records/:recordId', authMiddleware, async (req, res) => {
 
     const hospitalId = hospitalRows[0].hospital_id;
 
-    const { disease, description, treatment_date, ongoing_medication, prescription } = req.body;
+    const { disease, description, treatment_date, prescription } = req.body;
     await pool.query(
-      'UPDATE MedicalRecords SET disease = ?, description = ?, treatment_date = ?, ongoing_medication = ?, prescription = ? WHERE record_id = ? AND hospital_id = ?',
-      [disease, description, treatment_date, ongoing_medication, prescription, recordId, hospitalId]
+      'UPDATE Medical_Records SET disease = ?, description = ?, treatment_date = ?,  prescription = ? WHERE record_id = ? AND hospital_id = ?',
+      [disease, description, treatment_date, prescription, recordId, hospitalId]
     );
     res.json({ message: 'Record updated successfully' });
   } catch (error) {
@@ -95,4 +95,52 @@ router.put('/records/:recordId', authMiddleware, async (req, res) => {
   }
 });
 
+
+// Get Medical Records for a specific patient
+router.get('/records/:patientId', authMiddleware, async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    const userId = req.userId; // Get hospital's user ID from token
+
+    // Find the hospital ID associated with the logged-in user
+    const [hospitalRows] = await pool.query(
+      'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
+      [userId]
+    );
+
+    if (hospitalRows.length === 0) {
+      return res.status(404).json({ message: 'Hospital not found' });
+    }
+
+    const hospitalId = hospitalRows[0].hospital_id;
+
+    // Fetch medical records for the specified patient and hospital
+    const [rows] = await pool.query(
+      'SELECT * FROM Medical_Records WHERE user_id = ? AND hospital_id = ?',
+      [patientId, hospitalId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching medical records:', error);
+    res.status(500).json({ message: 'Failed to fetch medical records' });
+  }
+});
+
+router.get('/', authMiddleware, async (req, res) => {
+  try {
+    const patientId = req.userId; // Assuming userId from token is the patient's ID
+
+    // Fetch medical records for the logged-in patient
+    const [rows] = await pool.query(
+      'SELECT record_id, disease, description, treatment_date, prescription FROM Medical_Records WHERE user_id = ?',
+      [patientId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching medical records:', error);
+    res.status(500).json({ message: 'Failed to fetch medical records' });
+  }
+});
 module.exports = router;

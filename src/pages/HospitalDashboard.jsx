@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import {
   Users, // Doctors
-  Search, // Search Records
+  FileText, // View Records (changed from Search)
   CalendarDays, // Manage Appointments
   Settings,
   User,
@@ -41,7 +41,7 @@ const HospitalDashboard = () => {
   const getActiveItem = () => {
     const path = location.pathname;
     if (path.includes('/doctors')) return 'Doctors';
-    if (path.includes('/search-records')) return 'SearchRecords';
+    if (path.includes('/view-records')) return 'ViewRecords'; // Changed to ViewRecords
     if (path.includes('/manage-appointments')) return 'ManageAppointments';
     if (path.includes('/settings')) return 'Settings';
     return 'Doctors'; // Default
@@ -82,10 +82,10 @@ const HospitalDashboard = () => {
             onClick={() => handleNavigation('doctors')}
           />
           <NavItem
-            icon={<Search size={20} />}
-            text="Search Records"
-            active={activeItem === 'SearchRecords'}
-            onClick={() => handleNavigation('search-records')}
+            icon={<FileText size={20} />} // Changed icon to FileText
+            text="View Records" // Changed text to View Records
+            active={activeItem === 'ViewRecords'} // Changed active item to ViewRecords
+            onClick={() => handleNavigation('view-records')} // Changed route to view-records
           />
           <NavItem
             icon={<CalendarDays size={20} />}

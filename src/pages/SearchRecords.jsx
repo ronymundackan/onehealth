@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Modal from 'react-modal';
+import '../styles/SearchRecords.css';
+
+Modal.setAppElement('#root');
 
 const HospitalRecords = () => {
   const [patients, setPatients] = useState([]);
@@ -9,10 +13,9 @@ const HospitalRecords = () => {
     disease: '',
     description: '',
     treatment_date: '',
-    ongoing_medication: '',
     prescription: '',
   });
-  const [editingRecordId, setEditingRecordId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPatients();
@@ -44,6 +47,14 @@ const HospitalRecords = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleAddRecord = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -57,65 +68,62 @@ const HospitalRecords = () => {
         disease: '',
         description: '',
         treatment_date: '',
-        ongoing_medication: '',
         prescription: '',
       });
+      handleCloseModal();
     } catch (error) {
       console.error('Error adding record:', error);
     }
   };
 
-  const handleEditRecord = (recordId) => {
-    setEditingRecordId(recordId);
-    const recordToEdit = records.find((record) => record.record_id === recordId);
-    setNewRecord(recordToEdit);
-  };
-
-  const handleUpdateRecord = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(
-        `http://localhost:5000/records/records/${editingRecordId}`,
-        newRecord,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      handleViewRecords(selectedPatient);
-      setEditingRecordId(null);
-      setNewRecord({
-        disease: '',
-        description: '',
-        treatment_date: '',
-        ongoing_medication: '',
-        prescription: '',
-      });
-    } catch (error) {
-      console.error('Error updating record:', error);
-    }
+  const customModalStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width: '500px',
+      maxWidth: '90%',
+      maxHeight: '90vh',
+      overflow: 'auto'
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      zIndex: 1000
+    },
   };
 
   return (
-    <div>
-      <h2>Medical Records</h2>
+    <div className="records-container">
+      <h2 className="records-heading">Medical Records</h2>
       <div>
-        <h3>Patients</h3>
-        <table>
-          <thead>
+        <h3 className="records-subheading">Patients</h3>
+        <table className="records-table">
+          <thead className="records-table-head">
             <tr>
-              <th>Name</th>
-              <th>Phone Number</th>
-              <th>Actions</th>
+              <th className="records-table-cell">Name</th>
+              <th className="records-table-cell">Phone Number</th>
+              <th className="records-table-cell">Actions</th>
             </tr>
           </thead>
           <tbody>
             {patients.map((patient) => (
               <tr key={patient.user_id}>
-                <td>{patient.name}</td>
-                <td>{patient.phone_number}</td>
-                <td>
-                  <button onClick={() => handleViewRecords(patient.user_id)}>
+                <td className="records-table-cell">{patient.name}</td>
+                <td className="records-table-cell">{patient.phone_number}</td>
+                <td className="records-table-cell">
+                  <button
+                    className="button-primary"
+                    onClick={() => handleViewRecords(patient.user_id)}
+                  >
                     View Records
                   </button>
-                  <button onClick={() => setSelectedPatient(patient.user_id)}>
+                  <button
+                    className="button-success"
+                    onClick={() => { setSelectedPatient(patient.user_id); handleOpenModal(); }}
+                  >
                     Add Record
                   </button>
                 </td>
@@ -126,46 +134,114 @@ const HospitalRecords = () => {
       </div>
       {selectedPatient && (
         <div>
-          <h3>Medical Records</h3>
-          {records.map((record) => (
-            <div key={record.record_id}>
-              {editingRecordId === record.record_id ? (
+          <h3 className="records-subheading">Medical Records</h3>
+          {records.length === 0 ? (
+            <p className="no-records">No records found for this patient.</p>
+          ) : (
+            <div>
+              {records.map((record) => (
+                <div key={record.record_id} className="record-card">
+                  <div>
+                    <h4 className="record-heading">{record.disease}</h4>
+                    <p className="record-property"><strong>Description:</strong> {record.description}</p>
+                    <p className="record-property"><strong>Prescription:</strong> {record.prescription}</p>
+                    <p className="record-property"><strong>Treatment Date:</strong> {new Date(record.treatment_date).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={handleCloseModal}
+            style={customModalStyles}
+            contentLabel="Add Medical Record"
+            className="modal-content"
+            overlayClassName="modal-overlay"
+          >
+            <div>
+              <div className="modal-header">
+                <h2 className="modal-heading">Add Medical Record</h2>
+                <button
+                  className="modal-close-button"
+                  onClick={handleCloseModal}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div>
                 <div>
+                  <label className="modal-label" htmlFor="disease">Disease*</label>
                   <input
+                    id="disease"
                     type="text"
+                    placeholder="Enter disease name"
+                    className="modal-input"
                     value={newRecord.disease}
                     onChange={(e) =>
                       setNewRecord({ ...newRecord, disease: e.target.value })
                     }
                   />
-                  {/* Add other editable fields */}
-                  <button onClick={handleUpdateRecord}>Save</button>
-                  <button onClick={() => setEditingRecordId(null)}>
+                </div>
+
+                <div>
+                  <label className="modal-label" htmlFor="description">Description</label>
+                  <textarea
+                    id="description"
+                    placeholder="Enter detailed description"
+                    className="modal-textarea"
+                    value={newRecord.description}
+                    onChange={(e) =>
+                      setNewRecord({ ...newRecord, description: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="modal-label" htmlFor="prescription">Prescription</label>
+                  <textarea
+                    id="prescription"
+                    placeholder="Enter detailed prescription"
+                    className="modal-textarea"
+                    value={newRecord.prescription}
+                    onChange={(e) =>
+                      setNewRecord({ ...newRecord, prescription: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="modal-label" htmlFor="treatment_date">Treatment Date*</label>
+                  <input
+                    id="treatment_date"
+                    type="date"
+                    className="modal-input"
+                    value={newRecord.treatment_date}
+                    onChange={(e) =>
+                      setNewRecord({ ...newRecord, treatment_date: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="button-group">
+                  <button
+                    className="button-success full-width-button"
+                    onClick={handleAddRecord}
+                  >
+                    Add Record
+                  </button>
+                  <button
+                    className="button-cancel"
+                    onClick={handleCloseModal}
+                  >
                     Cancel
                   </button>
                 </div>
-              ) : (
-                <div>
-                  {record.disease} - {record.description}
-                  <button onClick={() => handleEditRecord(record.record_id)}>
-                    Edit
-                  </button>
-                </div>
-              )}
+              </div>
             </div>
-          ))}
-          <div>
-            <input
-              type="text"
-              placeholder="Disease"
-              value={newRecord.disease}
-              onChange={(e) =>
-                setNewRecord({ ...newRecord, disease: e.target.value })
-              }
-            />
-            {/* Add other input fields */}
-            <button onClick={handleAddRecord}>Add Record</button>
-          </div>
+          </Modal>
         </div>
       )}
     </div>

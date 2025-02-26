@@ -52,7 +52,7 @@ function App() {
         >
           <Route index element={<Navigate to="doctors" />} />
           <Route path="doctors" element={<Doctors />} />
-          <Route path="search-records" element={<SearchRecords />} />
+          <Route path="view-records" element={<SearchRecords />} />
           <Route path="manage-appointments" element={<ManageAppointments />} />
           <Route path="settings" element={<HospitalSettings />} />
         </Route>

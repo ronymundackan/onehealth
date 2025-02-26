@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/Doctors.css'; // Make sure to create this CSS file
+import '../styles/Doctors.css';
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -16,6 +16,7 @@ const Doctors = () => {
     afternoon_availability: '',
   });
   const [showEditModal, setShowEditModal] = useState(false);
+  const [errors, setErrors] = useState({}); // State to hold validation errors
 
   useEffect(() => {
     fetchDoctors();
@@ -37,9 +38,39 @@ const Doctors = () => {
 
   const handleInputChange = (e) => {
     setNewDoctor({ ...newDoctor, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' }); // Clear error when typing
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!newDoctor.name.trim()) {
+      newErrors.name = 'Name is required';
+      isValid = false;
+    }
+    if (!newDoctor.specialization.trim()) {
+      newErrors.specialization = 'Specialization is required';
+      isValid = false;
+    }
+    if (!newDoctor.forenoon_availability.trim()) {
+      newErrors.forenoon_availability = 'Forenoon availability is required';
+      isValid = false;
+    }
+    if (!newDoctor.afternoon_availability.trim()) {
+      newErrors.afternoon_availability = 'Afternoon availability is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleAddDoctor = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       await axios.post('http://localhost:5000/doctors', newDoctor, {
@@ -54,6 +85,7 @@ const Doctors = () => {
         forenoon_availability: '',
         afternoon_availability: '',
       });
+      setErrors({}); // Clear errors after successful add
     } catch (error) {
       console.error('Error adding doctor:', error);
     }
@@ -109,6 +141,7 @@ const Doctors = () => {
           onChange={handleInputChange}
           className="doctor-input"
         />
+        {errors.name && <p className="error-message">{errors.name}</p>}
         <input
           type="text"
           name="specialization"
@@ -117,6 +150,7 @@ const Doctors = () => {
           onChange={handleInputChange}
           className="doctor-input"
         />
+        {errors.specialization && <p className="error-message">{errors.specialization}</p>}
         <input
           type="text"
           name="forenoon_availability"
@@ -125,6 +159,7 @@ const Doctors = () => {
           onChange={handleInputChange}
           className="doctor-input"
         />
+        {errors.forenoon_availability && <p className="error-message">{errors.forenoon_availability}</p>}
         <input
           type="text"
           name="afternoon_availability"
@@ -133,6 +168,7 @@ const Doctors = () => {
           onChange={handleInputChange}
           className="doctor-input"
         />
+        {errors.afternoon_availability && <p className="error-message">{errors.afternoon_availability}</p>}
         <button onClick={handleAddDoctor} className="add-doctor-btn">Add Doctor</button>
       </div>
 
@@ -156,7 +192,7 @@ const Doctors = () => {
                 <td>{doctor.forenoon_availability}</td>
                 <td>{doctor.afternoon_availability}</td>
                 <td>
-                  <button 
+                  <button
                     onClick={() => handleEditAvailabilityClick(doctor)}
                     className="edit-btn"
                   >

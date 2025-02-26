@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/AppointmentStatus.css'; // Make sure to create this CSS file
+import '../styles/AppointmentStatus.css';
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [userAppointments, setUserAppointments] = useState([]);
   const [slot, setSlot] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const userRole = localStorage.getItem('role');
 
   useEffect(() => {
@@ -18,6 +19,7 @@ const Appointments = () => {
 
   const fetchHospitalAppointments = async () => {
     try {
+      setIsLoading(true);
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5000/appointments', {
         headers: {
@@ -25,13 +27,16 @@ const Appointments = () => {
         },
       });
       setAppointments(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching appointments:', error);
+      setIsLoading(false);
     }
   };
 
   const fetchUserAppointments = async () => {
     try {
+      setIsLoading(true);
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5000/appointments/user', {
         headers: {
@@ -39,8 +44,10 @@ const Appointments = () => {
         },
       });
       setUserAppointments(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching user appointments:', error);
+      setIsLoading(false);
     }
   };
 
@@ -63,7 +70,38 @@ const Appointments = () => {
     }
   };
 
-  // Format date for display
+  const handleToggleAccess = async (appointmentId, currentAccessStatus) => {
+    try {
+      setIsLoading(true);
+
+      // Optimistically update the UI
+      setUserAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appointment_id === appointmentId
+            ? { ...appointment, access_status: !currentAccessStatus }
+            : appointment
+        )
+      );
+
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `http://localhost:5000/appointments/${appointmentId}/access`,
+        { accessStatus: !currentAccessStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error toggling access:', error);
+      setIsLoading(false);
+      fetchUserAppointments();
+    }
+  };
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-GB', {
@@ -107,6 +145,9 @@ const Appointments = () => {
     }
   };
 
+  // Disable buttons during loading
+  const isButtonDisabled = isLoading;
+
   return (
     <div className="appointments-container">
       <h2>Appointments</h2>
@@ -143,6 +184,7 @@ const Appointments = () => {
                       <button
                         onClick={() => handleApproveAppointment(appointment.appointment_id)}
                         className="approve-btn"
+                        disabled={isButtonDisabled}
                       >
                         Approve
                       </button>
@@ -165,6 +207,7 @@ const Appointments = () => {
                   <th>Date</th>
                   <th>Status</th>
                   <th>Time</th>
+                  <th>Access</th>
                 </tr>
               </thead>
               <tbody>
@@ -179,6 +222,14 @@ const Appointments = () => {
                       </span>
                     </td>
                     <td>{getSlotTime(appointment.slot)}</td>
+                    <td>
+                      <button
+                        onClick={() => handleToggleAccess(appointment.appointment_id, appointment.access_status)}
+                        style={{ backgroundColor: appointment.access_status ? 'red' : 'green', color: 'white' }}
+                      >
+                        {appointment.access_status ? 'Revoke' : 'Grant'}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

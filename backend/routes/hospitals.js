@@ -162,4 +162,6 @@ router.get('/:hospitalId/doctors', async (req, res) => {
 });
 
 
+
+
 module.exports = router;

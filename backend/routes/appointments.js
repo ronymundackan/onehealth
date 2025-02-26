@@ -115,5 +115,22 @@ router.get('/', authMiddleware, async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch user appointments' });
     }
   });
+
+  router.put('/:appointmentId/access', authMiddleware, async (req, res) => {
+    try {
+      const { appointmentId } = req.params;
+      const { accessStatus } = req.body;
+  
+      await pool.query(
+        'UPDATE Appointments SET access_status = ? WHERE appointment_id = ?',
+        [accessStatus, appointmentId]
+      );
+  
+      res.json({ message: 'Access status updated successfully' });
+    } catch (error) {
+      console.error('Error updating access status:', error);
+      res.status(500).json({ message: 'Failed to update access status' });
+    }
+  });
   
 module.exports = router;

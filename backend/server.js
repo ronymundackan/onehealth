@@ -8,6 +8,7 @@ const usersRoutes = require('./routes/users'); // Import users routes
 const hospitalsRoutes = require('./routes/hospitals');
 const doctorsRoutes = require('./routes/doctors'); // Import doctors routes
 const appointmentRoutes = require('./routes/appointments')
+const recordsRoutes = require('./routes/records'); // Import the new routes
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/users', usersRoutes); // Mount users routes
 app.use('/hospitals', hospitalsRoutes); // Mount hospitals routes
 app.use('/doctors', doctorsRoutes); // Corrected base path
 app.use('/appointments', appointmentRoutes)
+app.use('/records', recordsRoutes); // Use the new routes
 
 
 app.listen(port, () => {

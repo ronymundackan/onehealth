@@ -97,36 +97,46 @@ router.put('/records/:recordId', authMiddleware, async (req, res) => {
 
 
 // Get Medical Records for a specific patient
-router.get('/records/:patientId', authMiddleware, async (req, res) => {
+router.get('/records/:userId', authMiddleware, async (req, res) => { // Changed to userId
   try {
-    const { patientId } = req.params;
-    const userId = req.userId; // Get hospital's user ID from token
+      const { userId } = req.params; // Changed to userId
+      const hospitalUserId = req.userId; // Hospital's user ID from token
 
-    // Find the hospital ID associated with the logged-in user
-    const [hospitalRows] = await pool.query(
-      'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
-      [userId]
-    );
+      // Find the hospital ID associated with the logged-in user
+      const [hospitalRows] = await pool.query(
+          'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
+          [hospitalUserId]
+      );
 
-    if (hospitalRows.length === 0) {
-      return res.status(404).json({ message: 'Hospital not found' });
-    }
+      if (hospitalRows.length === 0) {
+          return res.status(404).json({ message: 'Hospital not found' });
+      }
 
-    const hospitalId = hospitalRows[0].hospital_id;
+      const hospitalId = hospitalRows[0].hospital_id;
 
-    // Fetch medical records for the specified patient and hospital
-    const [rows] = await pool.query(
-      'SELECT * FROM Medical_Records WHERE user_id = ? AND hospital_id = ?',
-      [patientId, hospitalId]
-    );
+      // Check if the hospital has access to the patient's records in the Appointments table
+      const [appointmentRows] = await pool.query(
+          'SELECT access_status FROM Appointments WHERE user_id = ? AND hospital_id = ?',
+          [userId, hospitalId]
+      );
+      console.log(appointmentRows[0].access_status)
 
-    res.json(rows);
+      if (appointmentRows.length === 0 || appointmentRows[0].access_status !== 1) {
+          return res.status(403).json({ message: 'Access denied: No authorized appointment' });
+      }
+
+      // Fetch medical records for the specified patient and hospital
+      const [rows] = await pool.query(
+          'SELECT * FROM Medical_Records WHERE user_id = ?',
+          [userId]
+      );
+
+      res.json(rows);
   } catch (error) {
-    console.error('Error fetching medical records:', error);
-    res.status(500).json({ message: 'Failed to fetch medical records' });
+      console.error('Error fetching medical records:', error);
+      res.status(500).json({ message: 'Failed to fetch medical records' });
   }
 });
-
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const patientId = req.userId; // Assuming userId from token is the patient's ID

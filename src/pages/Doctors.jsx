@@ -4,19 +4,14 @@ import '../styles/Doctors.css';
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [errors, setErrors] = useState({});
+  
   const [newDoctor, setNewDoctor] = useState({
     name: '',
     specialization: '',
-    forenoon_availability: '',
-    afternoon_availability: '',
+    phone_number: '',
   });
-  const [editAvailability, setEditAvailability] = useState({
-    doctorId: null,
-    forenoon_availability: '',
-    afternoon_availability: '',
-  });
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [errors, setErrors] = useState({}); // State to hold validation errors
 
   useEffect(() => {
     fetchDoctors();
@@ -53,12 +48,8 @@ const Doctors = () => {
       newErrors.specialization = 'Specialization is required';
       isValid = false;
     }
-    if (!newDoctor.forenoon_availability.trim()) {
-      newErrors.forenoon_availability = 'Forenoon availability is required';
-      isValid = false;
-    }
-    if (!newDoctor.afternoon_availability.trim()) {
-      newErrors.afternoon_availability = 'Afternoon availability is required';
+    if (!newDoctor.phone_number.trim()) {
+      newErrors.phone_number = 'Phone number is required';
       isValid = false;
     }
 
@@ -82,95 +73,18 @@ const Doctors = () => {
       setNewDoctor({
         name: '',
         specialization: '',
-        forenoon_availability: '',
-        afternoon_availability: '',
+        phone_number: '',
       });
-      setErrors({}); // Clear errors after successful add
+      setShowAddModal(false);
+      setErrors({});
     } catch (error) {
       console.error('Error adding doctor:', error);
     }
   };
 
-  const handleEditAvailabilityClick = (doctor) => {
-    setEditAvailability({
-      doctorId: doctor.doctor_id,
-      forenoon_availability: doctor.forenoon_availability,
-      afternoon_availability: doctor.afternoon_availability,
-    });
-    setShowEditModal(true);
-  };
-
-  const handleAvailabilityInputChange = (e) => {
-    setEditAvailability({ ...editAvailability, [e.target.name]: e.target.value });
-  };
-
-  const handleSaveAvailability = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(
-        `http://localhost:5000/doctors/${editAvailability.doctorId}/availability`,
-        {
-          forenoon_availability: editAvailability.forenoon_availability,
-          afternoon_availability: editAvailability.afternoon_availability,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      fetchDoctors();
-      setShowEditModal(false);
-    } catch (error) {
-      console.error('Error updating availability:', error);
-    }
-  };
-
   return (
     <div className="doctors-container">
-      <h2>Doctors</h2>
-
-      {/* Add Doctor Form */}
-      <div className="add-doctor-section">
-        <h3>Add Doctor</h3>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={newDoctor.name}
-          onChange={handleInputChange}
-          className="doctor-input"
-        />
-        {errors.name && <p className="error-message">{errors.name}</p>}
-        <input
-          type="text"
-          name="specialization"
-          placeholder="Specialization"
-          value={newDoctor.specialization}
-          onChange={handleInputChange}
-          className="doctor-input"
-        />
-        {errors.specialization && <p className="error-message">{errors.specialization}</p>}
-        <input
-          type="text"
-          name="forenoon_availability"
-          placeholder="Forenoon Availability"
-          value={newDoctor.forenoon_availability}
-          onChange={handleInputChange}
-          className="doctor-input"
-        />
-        {errors.forenoon_availability && <p className="error-message">{errors.forenoon_availability}</p>}
-        <input
-          type="text"
-          name="afternoon_availability"
-          placeholder="Afternoon Availability"
-          value={newDoctor.afternoon_availability}
-          onChange={handleInputChange}
-          className="doctor-input"
-        />
-        {errors.afternoon_availability && <p className="error-message">{errors.afternoon_availability}</p>}
-        <button onClick={handleAddDoctor} className="add-doctor-btn">Add Doctor</button>
-      </div>
+      <h2 className="page-title">Doctors</h2>
 
       {/* Doctors List */}
       <div className="doctors-table-container">
@@ -179,9 +93,7 @@ const Doctors = () => {
             <tr>
               <th>Name</th>
               <th>Specialization</th>
-              <th>Forenoon Availability</th>
-              <th>Afternoon Availability</th>
-              <th>Actions</th>
+              <th>Phone Number</th>
             </tr>
           </thead>
           <tbody>
@@ -189,44 +101,74 @@ const Doctors = () => {
               <tr key={doctor.doctor_id}>
                 <td>{doctor.name}</td>
                 <td>{doctor.specialization}</td>
-                <td>{doctor.forenoon_availability}</td>
-                <td>{doctor.afternoon_availability}</td>
-                <td>
-                  <button
-                    onClick={() => handleEditAvailabilityClick(doctor)}
-                    className="edit-btn"
-                  >
-                    Edit Availability
-                  </button>
-                </td>
+                <td>{doctor.phone_number || '-'}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Edit Availability Modal */}
-      {showEditModal && (
+      {/* Floating Add Button */}
+      <button 
+        className="floating-add-btn" 
+        onClick={() => setShowAddModal(true)}
+        aria-label="Add Doctor"
+      >
+        +
+      </button>
+
+      {/* Add Doctor Modal */}
+      {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Edit Availability</h3>
-            <input
-              type="text"
-              name="forenoon_availability"
-              value={editAvailability.forenoon_availability}
-              onChange={handleAvailabilityInputChange}
-              className="modal-input"
-            />
-            <input
-              type="text"
-              name="afternoon_availability"
-              value={editAvailability.afternoon_availability}
-              onChange={handleAvailabilityInputChange}
-              className="modal-input"
-            />
+            <h3>Add Doctor</h3>
+            <div className="modal-form">
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Enter doctor name"
+                  value={newDoctor.name}
+                  onChange={handleInputChange}
+                  className="modal-input"
+                />
+                {errors.name && <p className="error-message">{errors.name}</p>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="specialization">Specialization</label>
+                <input
+                  id="specialization"
+                  type="text"
+                  name="specialization"
+                  placeholder="Enter specialization"
+                  value={newDoctor.specialization}
+                  onChange={handleInputChange}
+                  className="modal-input"
+                />
+                {errors.specialization && <p className="error-message">{errors.specialization}</p>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="phone_number">Phone Number</label>
+                <input
+                  id="phone_number"
+                  type="text"
+                  name="phone_number"
+                  placeholder="Enter phone number"
+                  value={newDoctor.phone_number}
+                  onChange={handleInputChange}
+                  className="modal-input"
+                />
+                {errors.phone_number && <p className="error-message">{errors.phone_number}</p>}
+              </div>
+            </div>
+            
             <div className="modal-buttons">
-              <button onClick={handleSaveAvailability} className="save-btn">Save</button>
-              <button onClick={() => setShowEditModal(false)} className="cancel-btn">Cancel</button>
+              <button onClick={handleAddDoctor} className="save-btn">Add Doctor</button>
+              <button onClick={() => setShowAddModal(false)} className="cancel-btn">Cancel</button>
             </div>
           </div>
         </div>

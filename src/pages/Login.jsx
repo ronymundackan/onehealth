@@ -15,6 +15,11 @@ const Login = () => {
 
   // Update state as user types
   const handleChange = (e) => {
+    console.log("Event",e);
+    console.log("Target",e.target);
+    console.log("Target name",e.target.name);
+    console.log("Target value",e.target.value);
+    
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(''); // Clear error on input change
   };

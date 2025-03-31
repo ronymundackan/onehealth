@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import "../styles/Appointments.css";
 
 const Appointments = () => {
   const [hospitals, setHospitals] = useState([]);
@@ -7,10 +8,32 @@ const Appointments = () => {
   const [selectedHospital, setSelectedHospital] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState('');
   const [appointmentDate, setAppointmentDate] = useState('');
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
 
   useEffect(() => {
     fetchHospitals();
+    calculateDateRange();
   }, []);
+
+  const calculateDateRange = () => {
+    const today = new Date();
+    const nextDay = new Date(today);
+    nextDay.setDate(today.getDate() + 1);
+    const oneWeekLater = new Date(today);
+    oneWeekLater.setDate(today.getDate() + 7);
+
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    setMinDate(formatDate(nextDay));
+    setMaxDate(formatDate(oneWeekLater));
+    setAppointmentDate(formatDate(nextDay)); // Set default to next day
+  };
 
   const fetchHospitals = async () => {
     try {
@@ -61,7 +84,6 @@ const Appointments = () => {
         }
       );
       alert('Appointment request sent successfully!');
-      // Reset form fields here if needed
     } catch (error) {
       console.error('Error booking appointment:', error);
       alert('Failed to send appointment request. Please try again.');
@@ -69,9 +91,9 @@ const Appointments = () => {
   };
 
   return (
-    <div>
+    <div className="appointments-box">
       <h2>Request Appointment</h2>
-      <div>
+      <div className="appointment-group">
         <label>Select Hospital:</label>
         <select value={selectedHospital} onChange={handleHospitalChange}>
           <option value="">Select a hospital</option>
@@ -82,7 +104,7 @@ const Appointments = () => {
           ))}
         </select>
       </div>
-      <div>
+      <div className="appointment-group">
         <label>Select Doctor:</label>
         <select value={selectedDoctor} onChange={handleDoctorChange}>
           <option value="">Select a doctor</option>
@@ -93,15 +115,17 @@ const Appointments = () => {
           ))}
         </select>
       </div>
-      <div>
+      <div className="appointment-group">
         <label>Appointment Date:</label>
         <input
           type="date"
           value={appointmentDate}
           onChange={(e) => setAppointmentDate(e.target.value)}
+          min={minDate}
+          max={maxDate}
         />
       </div>
-      <button onClick={handleBookAppointment}>Request Appointment</button>
+      <button className="appointment-btn" onClick={handleBookAppointment}>Request Appointment</button>
     </div>
   );
 };

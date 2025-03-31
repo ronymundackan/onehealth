@@ -45,37 +45,38 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 router.get('/', authMiddleware, async (req, res) => {
-    try {
-      const userId = req.userId;
-  
-      // Get hospital_id from Hospitals table
-      const [hospitalRows] = await pool.query(
-        'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
-        [userId]
-      );
-  
-      if (hospitalRows.length === 0) {
-        return res.status(404).json({ message: 'Hospital not found' });
-      }
-  
-      const hospitalId = hospitalRows[0].hospital_id;
-  
-      // Fetch appointments with user details
-      const [appointmentRows] = await pool.query(
-        `SELECT a.appointment_id, p.name AS user_name, p.phone_number, a.appointment_date 
-         FROM Appointments a 
-         JOIN Patients p ON a.user_id = p.user_id 
-         JOIN Doctors d ON a.doctor_id = d.doctor_id
-         WHERE d.hospital_id = ? AND a.status = 'pending'`,
-        [hospitalId]
-      );
-  
-      res.json(appointmentRows);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-      res.status(500).json({ message: 'Failed to fetch appointments' });
+  try {
+    const userId = req.userId;
+
+    // Get hospital_id from Hospitals table
+    const [hospitalRows] = await pool.query(
+      'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
+      [userId]
+    );
+
+    if (hospitalRows.length === 0) {
+      return res.status(404).json({ message: 'Hospital not found' });
     }
-  });
+
+    const hospitalId = hospitalRows[0].hospital_id;
+
+    // Fetch appointments with user details and total appointments for each doctor and date
+    const [appointmentRows] = await pool.query(
+      `SELECT a.appointment_id, p.name AS user_name, p.phone_number, a.appointment_date, d.name AS doctor_name,
+       (SELECT COUNT(*) FROM Appointments WHERE doctor_id = a.doctor_id AND appointment_date = a.appointment_date AND slot IS NOT NULL) AS total_appointments
+       FROM Appointments a 
+       JOIN Patients p ON a.user_id = p.user_id 
+       JOIN Doctors d ON a.doctor_id = d.doctor_id
+       WHERE d.hospital_id = ? AND a.status = 'pending'`,
+      [hospitalId]
+    );
+
+    res.json(appointmentRows);
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    res.status(500).json({ message: 'Failed to fetch appointments' });
+  }
+});
   
   // Approve appointment
   router.put('/:appointmentId/approve', authMiddleware, async (req, res) => {
@@ -132,5 +133,89 @@ router.get('/', authMiddleware, async (req, res) => {
       res.status(500).json({ message: 'Failed to update access status' });
     }
   });
+
+  router.get('/:appointmentId/access', authMiddleware, async (req, res) => {
+    try {
+      const { appointmentId } = req.params;
   
+      const [rows] = await pool.query(
+        'SELECT access_status FROM Appointments WHERE appointment_id = ?',
+        [appointmentId]
+      );
+  
+      if (rows.length === 0) {
+        return res.status(404).json({ message: 'Appointment not found' });
+      }
+  
+      res.json({ accessStatus: rows[0].access_status });
+    } catch (error) {
+      console.error('Error fetching access status:', error);
+      res.status(500).json({ message: 'Failed to fetch access status' });
+    }
+  });
+
+
+  router.get('/:appointmentId/details', authMiddleware, async (req, res) => {
+    const { appointmentId } = req.params;
+  
+    try {
+      const [rows] = await pool.query(
+        'SELECT doctor_id, appointment_date FROM Appointments WHERE appointment_id = ?',
+        [appointmentId]
+      );
+  
+      if (rows.length > 0) {
+        res.json(rows[0]);
+      } else {
+        res.status(404).json({ message: 'Appointment not found' });
+      }
+    } catch (error) {
+      console.error('Error fetching appointment details:', error);
+      res.status(500).json({ message: 'Failed to fetch appointment details' });
+    }
+  });
+
+  router.get('/slots/:appointmentDate/:slot/:doctorId', authMiddleware, async (req, res) => {
+    try {
+      const { appointmentDate, slot, doctorId } = req.params;
+  
+      // Extract the date portion (YYYY-MM-DD) from the ISO 8601 string
+      const datePart = appointmentDate.split('T')[0];
+
+      
+      const [rows] = await pool.query(
+        'SELECT COUNT(*) AS count FROM Appointments WHERE appointment_date= ? AND slot = ? AND doctor_id = ?',
+        [datePart, slot, doctorId]
+      );
+  
+
+      res.json({ count: rows[0].count });
+    } catch (error) {
+      console.error('Error fetching slot count', error);
+      res.status(500).json({ message: 'Failed to fetch slot count' });
+    }
+  });
+
+
+  router.get('doctor/counts', authMiddleware, async (req, res) => {
+    try {
+      const { appointmentDate, slot, doctorId } = req.params;
+  
+      // Extract the date portion (YYYY-MM-DD) from the ISO 8601 string
+      const datePart = appointmentDate.split('T')[0];
+
+      
+      const [rows] = await pool.query(
+        'SELECT COUNT(*) AS count FROM Appointments WHERE appointment_date= ? AND slot = ? AND doctor_id = ?',
+        [datePart, slot, doctorId]
+      );
+  
+
+      res.json({ count: rows[0].count });
+    } catch (error) {
+      console.error('Error fetching slot count', error);
+      res.status(500).json({ message: 'Failed to fetch slot count' });
+    }
+  });
+
 module.exports = router;

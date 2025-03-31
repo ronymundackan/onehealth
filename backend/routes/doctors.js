@@ -21,9 +21,9 @@ router.get('/', authMiddleware, async (req, res) => {
 
     const hospitalId = hospitalRows[0].hospital_id;
 
-    // Fetch doctors for the hospital
+    // Fetch doctors for the hospital (updated to get phone_number instead of availability fields)
     const [doctorsRows] = await pool.query(
-      'SELECT doctor_id, name, specialization, forenoon_availability, afternoon_availability FROM Doctors WHERE hospital_id = ?',
+      'SELECT doctor_id, name, specialization, phone_number FROM Doctors WHERE hospital_id = ?',
       [hospitalId]
     );
 
@@ -34,11 +34,11 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Add a new doctor
+// Add a new doctor (updated to include phone_number instead of availability fields)
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const userId = req.userId;
-    const { name, specialization, forenoon_availability, afternoon_availability } = req.body;
+    const { name, specialization, phone_number } = req.body;
 
     // Get hospital_id from Hospitals table
     const [hospitalRows] = await pool.query(
@@ -52,10 +52,10 @@ router.post('/', authMiddleware, async (req, res) => {
 
     const hospitalId = hospitalRows[0].hospital_id;
 
-    // Insert new doctor
+    // Insert new doctor with phone_number
     await pool.query(
-      'INSERT INTO Doctors (hospital_id, name, specialization, forenoon_availability, afternoon_availability) VALUES (?, ?, ?, ?, ?)',
-      [hospitalId, name, specialization, forenoon_availability, afternoon_availability]
+      'INSERT INTO Doctors (hospital_id, name, specialization, phone_number) VALUES (?, ?, ?, ?)',
+      [hospitalId, name, specialization, phone_number]
     );
 
     res.status(201).json({ message: 'Doctor added successfully' });
@@ -65,21 +65,39 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Update doctor availability
-router.put('/:doctorId/availability', authMiddleware, async (req, res) => {
+// Update doctor phone number (replaces the availability update endpoint)
+router.put('/:doctorId/phone', authMiddleware, async (req, res) => {
   try {
     const { doctorId } = req.params;
-    const { forenoon_availability, afternoon_availability } = req.body;
+    const { phone_number } = req.body;
 
     await pool.query(
-      'UPDATE Doctors SET forenoon_availability = ?, afternoon_availability = ? WHERE doctor_id = ?',
-      [forenoon_availability, afternoon_availability, doctorId]
+      'UPDATE Doctors SET phone_number = ? WHERE doctor_id = ?',
+      [phone_number, doctorId]
     );
 
-    res.json({ message: 'Doctor availability updated successfully' });
+    res.json({ message: 'Doctor phone number updated successfully' });
   } catch (error) {
-    console.error('Error updating availability:', error);
-    res.status(500).json({ message: 'Failed to update availability' });
+    console.error('Error updating phone number:', error);
+    res.status(500).json({ message: 'Failed to update phone number' });
+  }
+});
+
+// Optional: Add an endpoint to update all doctor information
+router.put('/:doctorId', authMiddleware, async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    const { name, specialization, phone_number } = req.body;
+
+    await pool.query(
+      'UPDATE Doctors SET name = ?, specialization = ?, phone_number = ? WHERE doctor_id = ?',
+      [name, specialization, phone_number, doctorId]
+    );
+
+    res.json({ message: 'Doctor information updated successfully' });
+  } catch (error) {
+    console.error('Error updating doctor information:', error);
+    res.status(500).json({ message: 'Failed to update doctor information' });
   }
 });
 

@@ -1,0 +1,116 @@
+/* Updated Appointments.css */
+
+.appointments-box {
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appointments-box h2 {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.appointment-group {
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.appointment-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #f0f0f0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.appointment-group select {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+  outline: none;
+  transition: 0.3s;
+}
+
+.appointment-group select:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.appointment-group select option {
+  background-color: #2a5298;
+  color: white;
+}
+
+.appointment-group input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+.appointment-group input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.appointment-group input[type="date"]::-webkit-datetime-edit {
+  color: white;
+}
+
+.appointment-group input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  color: white;
+}
+
+.appointment-group input[type="date"]::-webkit-datetime-edit-text,
+.appointment-group input[type="date"]::-webkit-datetime-edit-month-field,
+.appointment-group input[type="date"]::-webkit-datetime-edit-day-field,
+.appointment-group input[type="date"]::-webkit-datetime-edit-year-field {
+  color: white;
+}
+
+.appointment-group input[type="date"]:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.appointment-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #ff9800;
+  color: white;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.appointment-btn:hover {
+  background-color: #f57c00;
+}
+
+.appointment-btn:disabled {
+  background-color: #b0b0b0;
+  cursor: not-allowed;
+}

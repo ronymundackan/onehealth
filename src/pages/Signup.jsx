@@ -38,6 +38,11 @@ const Signup = () => {
       setError('Password must be at least 6 characters');
       return false;
     }
+    if (!/^[0-9]{10}$/.test(phone_number)) {
+      setError('Enter a valid 10-digit phone number');
+      return false;
+    }
+  
 
     return true;
   };
@@ -156,6 +161,7 @@ const Signup = () => {
                 name="gender"
                 value={gender}
                 onChange={handleChange}
+                required
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -163,6 +169,7 @@ const Signup = () => {
                 <option value="Other">Other</option>
                 <option value="Prefer not to say">Prefer not to say</option>
               </select>
+              
             </div>
           </div>
           
@@ -175,6 +182,7 @@ const Signup = () => {
               value={phone_number}
               onChange={handleChange}
               placeholder="Enter your phone number"
+              required
             />
           </div>
           
@@ -187,6 +195,7 @@ const Signup = () => {
               onChange={handleChange}
               placeholder="Enter your address"
               rows="3"
+              required
             />
           </div>
           

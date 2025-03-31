@@ -28,7 +28,8 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     // Find the user by email
-    const [userRows] = await pool.query('SELECT * FROM Users WHERE email = ?', [email]);
+    const queryResult = await pool.query('SELECT * FROM Users WHERE email = ?', [email]);
+    const userRows = queryResult[0];
 
     if (userRows.length === 0) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -40,8 +41,7 @@ router.post('/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+      return res.status(401).json({ message: 'Invalid password' });    }
 
     // Generate JWT
     const token = jwt.sign(
@@ -65,6 +65,13 @@ router.post('/signup', async (req, res) => {
 
     connection = await pool.getConnection();
     await connection.beginTransaction();
+
+    // Check if email already exists
+    const [existingUsers] = await connection.query('SELECT email FROM Users WHERE email = ?', [email]);
+    if (existingUsers.length > 0) {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Email already exists' });
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);

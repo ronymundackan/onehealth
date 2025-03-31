@@ -168,3 +168,61 @@
   .cancel-btn:hover {
     background-color: #4b5563;
   }
+  .floating-add-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 100;
+  }
+  
+  .floating-add-btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+  }
+  
+  .floating-add-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Modal styling */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  @media (max-width: 768px) {
+    .doctors-container {
+      padding: 16px;
+    }
+    
+    .modal-content {
+      width: 95%;
+      padding: 16px;
+    }
+    
+    .floating-add-btn {
+      bottom: 20px;
+      right: 20px;
+    }
+  }

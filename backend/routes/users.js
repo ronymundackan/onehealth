@@ -8,7 +8,6 @@ const pool = require('../db'); // Import your database connection pool
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.get('/me', authMiddleware, async (req, res) => {
-  console.log('Accessed /users/me route');
   try {
     const userId = req.userId; // Extracted from the JWT token by authMiddleware
 

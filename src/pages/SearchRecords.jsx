@@ -242,7 +242,7 @@ const HospitalRecords = () => {
               </div>
             </div>
           </Modal>
-        </div>
+        </div>  
       )}
     </div>
   );

@@ -12,11 +12,9 @@ import Doctors from './pages/Doctors';
 import SearchRecords from './pages/SearchRecords';
 import ManageAppointments from './pages/ManageAppointments';
 import AppointmentStatus from './pages/AppointmentStatus';
-import HospitalSettings from './pages/HospitalSettings';
-import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
+import SortAppointments from './pages/SortAppointments'; // Import SortAppointments
+import ProtectedRoute from './components/ProtectedRoute';
 import Appointments from './pages/Appointments';
-
-
 
 function App() {
   return (
@@ -30,7 +28,7 @@ function App() {
         <Route
           path="/user-dashboard"
           element={
-            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
+            <ProtectedRoute>
               <UserDashboard />
             </ProtectedRoute>
           }
@@ -45,7 +43,7 @@ function App() {
         <Route
           path="/hospital-dashboard"
           element={
-            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
+            <ProtectedRoute>
               <HospitalDashboard />
             </ProtectedRoute>
           }
@@ -54,18 +52,17 @@ function App() {
           <Route path="doctors" element={<Doctors />} />
           <Route path="view-records" element={<SearchRecords />} />
           <Route path="manage-appointments" element={<ManageAppointments />} />
-          <Route path="settings" element={<HospitalSettings />} />
+          <Route path="sort-appointments" element={<SortAppointments />} /> {/* Changed from settings */}
         </Route>
 
         <Route
           path="/admin-dashboard"
           element={
-            <ProtectedRoute> {/* Wrap with ProtectedRoute */}
+            <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
           }
         >
-          
         </Route>
 
         <Route path="*" element={<Navigate to="/login" />} />
@@ -75,4 +72,3 @@ function App() {
 }
 
 export default App;
-

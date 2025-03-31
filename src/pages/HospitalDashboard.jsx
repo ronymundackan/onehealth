@@ -5,7 +5,7 @@ import {
   Users, // Doctors
   FileText, // View Records (changed from Search)
   CalendarDays, // Manage Appointments
-  Settings,
+  ArrowUpDown,
   User,
 } from 'lucide-react';
 
@@ -43,8 +43,8 @@ const HospitalDashboard = () => {
     if (path.includes('/doctors')) return 'Doctors';
     if (path.includes('/view-records')) return 'ViewRecords'; // Changed to ViewRecords
     if (path.includes('/manage-appointments')) return 'ManageAppointments';
-    if (path.includes('/settings')) return 'Settings';
-    return 'Doctors'; // Default
+    if (path.includes('/sort-appointments')) return 'SortAppointments';
+    return 'SortAppointments'; // Default
   };
 
   const activeItem = getActiveItem();
@@ -94,11 +94,12 @@ const HospitalDashboard = () => {
             onClick={() => handleNavigation('manage-appointments')}
           />
           <NavItem
-            icon={<Settings size={20} />}
-            text="Settings"
-            active={activeItem === 'Settings'}
-            onClick={() => handleNavigation('settings')}
+            icon={<ArrowUpDown size={20} />} 
+            text="Sort Appointments"
+            active={activeItem === 'SortAppointments'}
+            onClick={() => handleNavigation('sort-appointments')}
           />
+
         </nav>
 
         <div className="p-4 border-t border-gray-200 mt-auto">
@@ -140,9 +141,8 @@ const HospitalDashboard = () => {
 const NavItem = ({ icon, text, active, onClick }) => {
   return (
     <div
-      className={`flex items-center p-3 rounded-md cursor-pointer transition-colors ${
-        active ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-blue-600 hover:text-white'
-      }`}
+      className={`flex items-center p-3 rounded-md cursor-pointer transition-colors ${active ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-blue-600 hover:text-white'
+        }`}
       onClick={onClick}
     >
       <div>{icon}</div>

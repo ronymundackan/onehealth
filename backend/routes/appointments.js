@@ -218,4 +218,98 @@ router.get('/', authMiddleware, async (req, res) => {
     }
   });
 
+// In your appointments router file (e.g., routes/appointments.js)
+
+router.get('/sorted', authMiddleware, async (req, res) => {
+  try {
+      const userId = req.userId;
+      const { sortBy = 'appointment_date', status } = req.query;
+
+      // Get hospital_id for this user
+      const [hospitalRows] = await pool.query(
+          'SELECT hospital_id FROM Hospitals WHERE user_id = ?',
+          [userId]
+      );
+
+      if (hospitalRows.length === 0) {
+          return res.status(404).json({ message: 'Hospital not found' });
+      }
+
+      const hospitalId = hospitalRows[0].hospital_id;
+
+      // Query for hospital users
+      let query = `
+          SELECT a.appointment_id, a.user_id, p.name AS user_name, p.phone_number,
+                 d.name AS doctor_name, a.hospital_id, a.appointment_date, 
+                 a.status, a.slot, a.created_at, a.access_status
+          FROM Appointments a
+          JOIN Users u ON a.user_id = u.user_id
+          JOIN Patients p ON a.user_id = p.user_id
+          JOIN Doctors d ON a.doctor_id = d.doctor_id
+          WHERE a.hospital_id = ?
+      `;
+
+      let params = [hospitalId];
+
+      // Add status filter if provided
+      if (status) {
+          query += ' AND a.status = ?';
+          params.push(status);
+      }
+
+      // Add sorting
+      const validSortColumns = ['appointment_date', 'created_at', 'status'];
+      const sortColumn = validSortColumns.includes(sortBy) ? sortBy : 'appointment_date';
+
+      query += ` ORDER BY a.${sortColumn}`;
+
+      // Execute query
+      const [appointments] = await pool.query(query, params);
+
+      res.status(200).json(appointments);
+  } catch (error) {
+      console.error('Error fetching sorted appointments:', error);
+      res.status(500).json({ message: 'Failed to fetch appointments' });
+  }
+});
+
+
+
+// routes/appointments.js - Add this new route to your existing file
+
+// Endpoint to mark an appointment as complete
+router.put('/:appointmentId/complete', authMiddleware, async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const userId = req.userId;
+    
+    // Check if the appointment exists
+    const [appointmentRows] = await pool.query(
+      'SELECT * FROM Appointments WHERE appointment_id = ?',
+      [appointmentId]
+    );
+    
+    if (appointmentRows.length === 0) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    
+    // Optional: Check if the user has permission to mark this appointment as complete
+    // This could be based on user role (doctor, admin) or relationship to the appointment
+    
+    // Update the appointment status to completed
+    await pool.query(
+      'UPDATE Appointments SET status = "completed" WHERE appointment_id = ?',
+      [appointmentId]
+    );
+    
+    return res.status(200).json({ 
+      message: 'Appointment marked as complete successfully',
+      appointmentId
+    });
+    
+  } catch (error) {
+    console.error('Error marking appointment as complete:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 module.exports = router;

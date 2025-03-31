@@ -117,6 +117,8 @@ const Appointments = () => {
         return 'status-approved';
       case 'pending':
         return 'status-pending';
+      case 'completed':
+        return 'status-completed'
       default:
         return '';
     }

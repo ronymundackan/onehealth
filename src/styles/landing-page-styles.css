@@ -1,0 +1,597 @@
+/* Reset styles within the landing page namespace only */
+.one-health-landing {
+  all: initial; /* Reset all properties */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fafafa;
+  display: block; /* Restore display which was reset by all:initial */
+  width: 100%;
+}
+
+/* Override body styles for the landing page */
+body:has(.one-health-landing) {
+  all: initial;
+  display: block;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Reset all direct children of the landing page */
+.one-health-landing * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base element styles within landing page */
+.one-health-landing a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.one-health-landing ul {
+  list-style: none;
+}
+
+.one-health-landing img {
+  max-width: 100%;
+}
+
+.one-health-landing h1, 
+.one-health-landing h2, 
+.one-health-landing h3, 
+.one-health-landing h4, 
+.one-health-landing h5, 
+.one-health-landing h6 {
+  color: #111827;
+  font-weight: 700;
+}
+
+.one-health-landing button {
+  background: none;
+  border: none;
+  width: auto;
+  color: inherit;
+  font: inherit;
+}
+
+.one-health-landing input {
+  background: white;
+  border: 1px solid #e5e7eb;
+  color: #333;
+  width: auto;
+}
+
+/* Header styles */
+.one-health-landing .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 8%;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.one-health-landing .logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: -0.5px;
+}
+
+.one-health-landing .logo span {
+  color: #3b82f6;
+}
+
+.one-health-landing .navigation ul {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.one-health-landing .navigation a {
+  font-weight: 500;
+  transition: color 0.2s;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.one-health-landing .navigation a:hover {
+  color: #3b82f6;
+}
+
+.one-health-landing .auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.one-health-landing .login-btn {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #4b5563;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.one-health-landing .login-btn:hover {
+  background-color: #f9fafb;
+  color: #3b82f6;
+}
+
+.one-health-landing .signup-btn {
+  padding: 0.5rem 1.25rem;
+  background-color: #3b82f6;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.one-health-landing .signup-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Hero section */
+.one-health-landing .hero {
+  display: flex;
+  align-items: center;
+  padding: 6rem 8%;
+  background-color: #fff;
+}
+
+.one-health-landing .hero-content {
+  flex: 1;
+  padding-right: 4rem;
+}
+
+.one-health-landing .hero-content h2 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #111827;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-align: left;
+}
+
+.one-health-landing .hero-content p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 2.5rem;
+  max-width: 540px;
+  text-align: left;
+}
+
+.one-health-landing .hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.one-health-landing .primary-btn {
+  padding: 0.75rem 1.75rem;
+  background-color: #3b82f6;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s;
+  width: auto;
+}
+
+.one-health-landing .primary-btn:hover {
+  background-color: #2563eb;
+}
+
+.one-health-landing .secondary-btn {
+  padding: 0.75rem 1.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #4b5563;
+  font-weight: 500;
+  transition: all 0.2s;
+  width: auto;
+}
+
+.one-health-landing .secondary-btn:hover {
+  background-color: #f9fafb;
+  color: #3b82f6;
+}
+
+.one-health-landing .hero-image {
+  flex: 1;
+}
+
+.one-health-landing .hero-image img {
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Section styles */
+.one-health-landing .section-title {
+  text-align: center;
+  font-size: 2.25rem;
+  margin-bottom: 3.5rem;
+  color: #111827;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Features section */
+.one-health-landing .features {
+  padding: 6rem 8%;
+  background-color: #fafafa;
+}
+
+.one-health-landing .features-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.one-health-landing .feature-card {
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: #fff;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.one-health-landing .feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.one-health-landing .feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.one-health-landing .feature-card h3 {
+  margin-bottom: 1rem;
+  color: #111827;
+  font-weight: 600;
+}
+
+.one-health-landing .feature-card p {
+  color: #6b7280;
+}
+
+/* How it works section */
+.one-health-landing .how-it-works {
+  padding: 6rem 8%;
+  background-color: #fff;
+}
+
+.one-health-landing .steps-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.one-health-landing .step {
+  display: flex;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+}
+
+.one-health-landing .step:last-child {
+  margin-bottom: 0;
+}
+
+.one-health-landing .step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+.one-health-landing .step-content h3 {
+  margin-bottom: 0.5rem;
+  color: #111827;
+  font-weight: 600;
+  text-align: left;
+}
+
+.one-health-landing .step-content p {
+  color: #6b7280;
+  max-width: 540px;
+  text-align: left;
+}
+
+/* Testimonials section */
+.one-health-landing .testimonials {
+  padding: 6rem 8%;
+  background-color: #fafafa;
+}
+
+.one-health-landing .testimonials-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.one-health-landing .testimonial-card {
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.one-health-landing .testimonial-content {
+  margin-bottom: 2rem;
+  color: #4b5563;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.one-health-landing .testimonial-author {
+  display: flex;
+  align-items: center;
+}
+
+.one-health-landing .testimonial-author img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  object-fit: cover;
+}
+
+.one-health-landing .testimonial-author h4 {
+  font-weight: 600;
+  color: #111827;
+  text-align: left;
+}
+
+.one-health-landing .testimonial-author p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  text-align: left;
+}
+
+/* CTA section */
+.one-health-landing .cta {
+  padding: 6rem 8%;
+  background-color: #3b82f6;
+  color: white;
+  text-align: center;
+}
+
+.one-health-landing .cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.one-health-landing .cta h2 {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+}
+
+.one-health-landing .cta p {
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+  font-size: 1.125rem;
+  color: white;
+}
+
+.one-health-landing .cta .primary-btn {
+  background-color: white;
+  color: #3b82f6;
+  padding: 0.875rem 2rem;
+  font-size: 1.05rem;
+}
+
+.one-health-landing .cta .primary-btn:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Footer styles */
+.one-health-landing .footer {
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 5rem 8% 2rem;
+}
+
+.one-health-landing .footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+.one-health-landing .footer-logo {
+  flex: 1;
+  min-width: 250px;
+}
+
+.one-health-landing .footer-logo p {
+  margin-top: 1rem;
+  color: #9ca3af;
+  text-align: left;
+}
+
+.one-health-landing .footer-links {
+  flex: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+}
+
+.one-health-landing .footer-column {
+  flex: 1;
+  min-width: 150px;
+}
+
+.one-health-landing .footer-column h3 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  font-weight: 600;
+  text-align: left;
+}
+
+.one-health-landing .footer-column ul li {
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.one-health-landing .footer-column a {
+  color: #9ca3af;
+  transition: color 0.2s;
+  font-size: 0.95rem;
+}
+
+.one-health-landing .footer-column a:hover {
+  color: #3b82f6;
+}
+
+.one-health-landing .footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.one-health-landing .footer-legal {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .one-health-landing .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 5%;
+  }
+
+  .one-health-landing .hero-content {
+    padding-right: 0;
+    margin-bottom: 3rem;
+  }
+
+  .one-health-landing .hero-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .one-health-landing .hero-buttons {
+    justify-content: center;
+  }
+
+  .one-health-landing .section-title {
+    font-size: 2rem;
+  }
+
+  .one-health-landing .footer-content {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .one-health-landing .header {
+    flex-direction: column;
+    padding: 1.5rem 5%;
+  }
+
+  .one-health-landing .logo-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .one-health-landing .navigation {
+    margin-bottom: 1.5rem;
+  }
+
+  .one-health-landing .navigation ul {
+    gap: 1.5rem;
+  }
+
+  .one-health-landing .hero-content h2 {
+    font-size: 2.25rem;
+    text-align: center;
+  }
+
+  .one-health-landing .hero-content p {
+    text-align: center;
+  }
+
+  .one-health-landing .step-content h3,
+  .one-health-landing .step-content p,
+  .one-health-landing .testimonial-content {
+    text-align: left;
+  }
+
+  .one-health-landing .footer-bottom {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .one-health-landing .footer-legal {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .one-health-landing .navigation ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 1.5rem;
+  }
+
+  .one-health-landing .auth-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .one-health-landing .hero-content h2 {
+    font-size: 2rem;
+  }
+
+  .one-health-landing .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .one-health-landing .primary-btn,
+  .one-health-landing .secondary-btn {
+    width: 100%;
+  }
+
+  .one-health-landing .feature-card {
+    padding: 2rem;
+  }
+
+  .one-health-landing .testimonial-card {
+    padding: 2rem;
+  }
+
+  .one-health-landing .footer-legal {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

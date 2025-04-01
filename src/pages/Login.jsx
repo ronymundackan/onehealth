@@ -15,10 +15,7 @@ const Login = () => {
 
   // Update state as user types
   const handleChange = (e) => {
-    console.log("Event",e);
-    console.log("Target",e.target);
-    console.log("Target name",e.target.name);
-    console.log("Target value",e.target.value);
+   
     
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(''); // Clear error on input change
@@ -37,8 +34,6 @@ const Login = () => {
 
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-      console.log(localStorage.getItem('token'))
-      console.log('Token stored in localStorage:', localStorage.getItem('token')); // Check token storage
     
       // Fetch user role
       const user = await axios.get('http://localhost:5000/users/me', {
@@ -47,14 +42,10 @@ const Login = () => {
         },
       });
     
-      console.log("axios call: ", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      console.log("Role from backend:", user.data.role);
+    
+
       localStorage.setItem('userRole', user.data.role); // Assuming user.data.role contains the role
-      console.log("Role from local storage:", localStorage.getItem('userRole')); 
+      
       // Redirect based on role
       if (user.data.role === 'patient') {
         navigate('/user-dashboard');

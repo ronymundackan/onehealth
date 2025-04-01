@@ -15,13 +15,15 @@ import AppointmentStatus from './pages/AppointmentStatus';
 import SortAppointments from './pages/SortAppointments'; // Import SortAppointments
 import ProtectedRoute from './components/ProtectedRoute';
 import Appointments from './pages/Appointments';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
     <Router>
       <Routes>
+      <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/landing-page" />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -65,7 +67,7 @@ function App() {
         >
         </Route>
 
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/landing-page" />} />
       </Routes>
     </Router>
   );

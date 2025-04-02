@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/Login.css';
+import '../styles/Login.css'; // Make sure this path is correct
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -15,8 +16,6 @@ const Login = () => {
 
   // Update state as user types
   const handleChange = (e) => {
-   
-    
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(''); // Clear error on input change
   };
@@ -27,25 +26,23 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', { // Corrected endpoint
+      const response = await axios.post('http://localhost:5000/auth/login', {
         email,
         password,
       });
 
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-    
+
       // Fetch user role
       const user = await axios.get('http://localhost:5000/users/me', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-    
-    
 
       localStorage.setItem('userRole', user.data.role); // Assuming user.data.role contains the role
-      
+
       // Redirect based on role
       if (user.data.role === 'patient') {
         navigate('/user-dashboard');
@@ -62,17 +59,17 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form-container">
-        <h1>Medical Records System</h1>
+    <div className="login-override-container">
+      <div className="login-override-form-container">
         <h2>Login to Your Account</h2>
-        
-        {error && <div className="error-message">{error}</div>}
-        
+
+        {error && <div className="login-override-error-message">{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <input
+              className="login-override-input" // Use overriding input class
               type="email"
               id="email"
               name="email"
@@ -82,10 +79,11 @@ const Login = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
+              className="login-override-input" // Use overriding input class
               type="password"
               id="password"
               name="password"
@@ -95,25 +93,25 @@ const Login = () => {
               required
             />
           </div>
-          
+
           <div className="form-links">
-            <Link to="/forgot-password" className="forgot-password-link">
+            <Link to="/forgot-password" className="login-override-link">
               Forgot Password?
             </Link>
           </div>
-          
-          <button 
-            type="submit" 
-            className="login-button"
+
+          <button
+            type="submit"
+            className="login-override-button" // Use overriding button class
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        
+
         <div className="signup-prompt">
           Don't have an account?{' '}
-          <Link to="/signup" className="signup-link">
+          <Link to="/signup" className="login-override-link">
             Sign Up
           </Link>
         </div>
@@ -121,5 +119,6 @@ const Login = () => {
     </div>
   );
 };
+
 
 export default Login;

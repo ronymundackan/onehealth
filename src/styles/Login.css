@@ -1,115 +1,82 @@
-.login-container {
+/* login.css - Overriding app.css within the login component */
+
+.login-override-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f8fa;
+  background: linear-gradient(135deg, #1e3c72, #2a5298); /* Override app.css body gradient */
+  color: white; /* Override app.css body text color */
 }
 
-.login-form-container {
+.login-override-form-container {
   width: 100%;
-  max-width: 450px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-}
-
-h1 {
-  color: #2a6bb1;
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+  max-width: 400px; /* Override app.css container max-width */
+  padding: 30px; /* Override app.css container padding */
+  background: rgba(255, 255, 255, 0.1); /* Override app.css container background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Override app.css container box-shadow */
+  border-radius: 12px; /* Override app.css container border-radius */
   text-align: center;
 }
 
-h2 {
-  font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 1.5rem;
-  text-align: center;
+.login-override-form-container h1, .login-override-form-container h2 {
+    color: white; /*override h2 color*/
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #555;
-}
-
-input {
+.login-override-input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
-}
-
-input:focus {
-  border-color: #2a6bb1;
+  padding: 12px; /* Override app.css input padding */
+  margin-bottom: 15px; /* Override app.css input margin-bottom */
+  border: none; /* Override app.css input border */
+  border-radius: 6px; /* Override app.css input border-radius */
+  background: rgba(255, 255, 255, 0.2); /* Override app.css input background */
+  color: white; /* Override app.css input color */
+  font-size: 1rem; /* Override app.css input font-size */
+  box-sizing: border-box;
   outline: none;
+  transition: 0.3s;
 }
 
-.form-links {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
+.login-override-input::placeholder {
+  color: rgba(255, 255, 255, 0.7); /* Override app.css input placeholder color */
 }
 
-.forgot-password-link {
-  color: #2a6bb1;
-  text-decoration: none;
-  font-size: 0.9rem;
+.login-override-input:focus {
+  background: rgba(255, 255, 255, 0.3); /* Override app.css input focus background */
 }
 
-.forgot-password-link:hover {
-  text-decoration: underline;
-}
-
-.login-button {
+.login-override-button {
   width: 100%;
-  padding: 0.75rem;
-  background-color: #2a6bb1;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 500;
+  padding: 12px; /* Override app.css button padding */
+  border: none; /* Override app.css button border */
+  background-color: #ff9800; /* Override app.css button background-color */
+  color: white; /* Override app.css button color */
+  border-radius: 6px; /* Override app.css button border-radius */
+  font-size: 1rem; /* Override app.css button font-size */
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: 0.3s;
+  margin-top: 10px; /* Override app.css button margin-top */
 }
 
-.login-button:hover {
-  background-color: #1d5899;
+.login-override-button:hover {
+  background-color: #f57c00; /* Override app.css button hover background-color */
 }
 
-.login-button:disabled {
-  background-color: #97b3d0;
-  cursor: not-allowed;
+.login-override-link {
+  color: #ff9800; /* Override app.css link color */
+  text-decoration: none; /* Override app.css link text-decoration */
+  cursor: pointer;
+  font-weight: bold; /* Override app.css link font-weight */
+  display: block;
+  margin-top: 15px; /* Override app.css link margin-top */
+  transition: 0.3s;
 }
 
-.signup-prompt {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.95rem;
-  color: #666;
+.login-override-link:hover {
+  text-decoration: underline; /* Override app.css link hover text-decoration */
 }
 
-.signup-link {
-  color: #2a6bb1;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.signup-link:hover {
-  text-decoration: underline;
-}
-
-.error-message {
+.login-override-error-message {
   background-color: #ffebee;
   color: #c62828;
   padding: 0.75rem;
